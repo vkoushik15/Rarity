@@ -1,0 +1,117 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+   /* background-image: url('../images/upload.jpg'); Set background image */
+    background-size: cover; /* Make sure it covers the whole page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent repeating the background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Main Container for Upload Form */
+  .handleupload {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Take full width of the page */
+    height: 100%; /* Take full height of the page */
+    position: relative; /* Ensure the form is positioned correctly */
+  }
+  
+  /* Styling for the Box Container */
+  .handleupload form {
+    margin-top: 120px;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    padding: 30px;
+    border: 1px solid #000; /* Black border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    width: 100%;
+    max-width: 500px; /* Limit the width of the form */
+    box-sizing: border-box;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the form box in the middle */
+  }
+  
+  /* Heading inside the form */
+  .handleupload h2 {
+    color: #000;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  
+  /* Input Fields */
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+  }
+  
+  /* File Input Styling */
+  input[type="file"] {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  input[type="file"]:focus {
+    border-color: #007bff;
+  }
+  
+  /* Button Styling */
+  button {
+    width: 100%;
+    padding: 14px;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #333;
+  }
+  
+  /* Responsive Design for Smaller Screens */
+  @media (max-width: 768px) {
+    .handleupload form {
+      width: 90%;
+      padding: 20px;
+    }
+  
+    .handleupload h2 {
+      font-size: 1.5rem;
+    }
+  
+    input, button {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+  
