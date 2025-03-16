@@ -1,116 +1,27 @@
 
 
-/*import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
-import '../styling/navbar.css'// Import the custom CSS file
-
-const Navbar = () => {
-  const token = localStorage.getItem("token");
- const[isLoggedIn,setIsLoggedIn]=useState(false)
- const[user,setUser]=useState(null)
-  useEffect(()=>{
-    
- 
-  
-
-  if (token) {
-    try {
-      const user1 = jwtDecode(token);
-      setUser(user1)
-      setIsLoggedIn(true)
-    } catch (error) {
-      console.error("Invalid token:", error);
-      localStorage.removeItem("token");
-    }
-  }
-
-  },[token])
-  
-
-  return (
-    <nav className="navbar">
-      <div className="navbar-container">
-       
-        <div className="navbar-title">Rarity</div>
-
-       
-        <ul className="navbar-links">
-          <li>
-            <NavLink to="/" className="navbar-link">
-              Home
-            </NavLink>
-          </li>
-          {isLoggedIn ? (
-            <>
-              <li>
-                <NavLink to="/chats" className="navbar-link">
-                  Chats
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`/profile?query=${user.id}`} className="navbar-link">
-                  Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/uploads" className="navbar-link">
-                  Uploads
-                </NavLink>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    window.location.reload();
-                  }}
-                  className="navbar-button"
-                >
-                  Logout
-                </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <NavLink to="/login" className="navbar-link">
-                  Login
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/register" className="navbar-link">
-                  Register
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
-      </div>
-    </nav>
-  );
-};
-
-export default Navbar;
-*/
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 import "../styling/navbar.css";
 
-const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Navbar = ({ logged }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(logged);
   const [user, setUser] = useState(null);
+  const [unseenCount, setUnseenCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Create an async function inside useEffect
     const checkLoginStatus = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const decodedUser = await jwtDecode(token);  // Await for token decoding
+          const decodedUser = jwtDecode(token);
           setUser(decodedUser);
           setIsLoggedIn(true);
+          fetchUnseenMessageCount(decodedUser.id);
         } catch (error) {
           console.error("Invalid token:", error);
           localStorage.removeItem("token");
@@ -122,68 +33,85 @@ const Navbar = () => {
         setIsLoggedIn(false);
       }
     };
-
-    // Call the async function
     checkLoginStatus();
-  }, []);  // The empty dependency array ensures this runs once when the component mounts
+  }, [location]);
 
+ 
+  const fetchUnseenMessageCount = async (userId) => {
+    try {
+      const response = await axios.post(`http://localhost:8000/msg/gumc/all`,{
+        userId:userId
+      });
+      setUnseenCount(response.data.unseenCount);
+      console.log(unseenCount)
+    } catch (error) {
+      console.error("Error fetching unseen message count:", error);
+    }
+  };
+  useEffect(()=>{
+    fetchUnseenMessageCount()
+      },[])
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUser(null);
-    navigate("/");  // Redirect to home after logout
+    navigate("/");
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Navbar Title */}
         <div className="navbar-title">Rarity</div>
-
-        {/* Navbar Links */}
         <ul className="navbar-links">
           <li>
-            <NavLink to="/" className="navbar-link">
-              Home
-            </NavLink>
+            <NavLink to="/" className="navbar-link">Home</NavLink>
           </li>
           {isLoggedIn ? (
             <>
               <li>
-                <NavLink to="/chats" className="navbar-link">
-                  Chats
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`/profile?query=${user.id}`} className="navbar-link">
-                  Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/uploads" className="navbar-link">
-                  Uploads
-                </NavLink>
-              </li>
-              <li>
-                <button
-                  onClick={handleLogout}
-                  className="navbar-button"
+                <NavLink
+                  to="/chats"
+                  className="navbar-link"
+                  style={{
+                    backgroundColor: unseenCount > 0 ? "#dcdcdc" : "transparent",
+                    position: "relative",
+                    padding: "8px 15px",
+                    borderRadius: "5px",
+                  }}
                 >
-                  Logout
-                </button>
+                  Chats
+                  {unseenCount > 0 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "5px",
+                        right: "5px",
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "red",
+                      }}
+                    />
+                  )}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to={`/profile?query=${user.id}`} className="navbar-link">Profile</NavLink>
+              </li>
+              <li>
+                <NavLink to="/uploads" className="navbar-link">Uploads</NavLink>
+              </li>
+              <li>
+                <button onClick={handleLogout} className="navbar-button">Logout</button>
               </li>
             </>
           ) : (
             <>
               <li>
-                <NavLink to="/login" className="navbar-link">
-                  Login
-                </NavLink>
+                <NavLink to="/login" className="navbar-link">Login</NavLink>
               </li>
               <li>
-                <NavLink to="/register" className="navbar-link">
-                  Register
-                </NavLink>
+                <NavLink to="/register" className="navbar-link">Register</NavLink>
               </li>
             </>
           )}

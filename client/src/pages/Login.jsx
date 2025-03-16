@@ -111,6 +111,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/context";
 import bgimage from "../images/login.jpg"; // Import the background image
 import "../styling/login.css"; // Import the external CSS file
+import Navbar from "../components/navbar";
 
 const Login = () => {
   const user = useContext(UserContext);
@@ -139,6 +140,8 @@ const Login = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="login-container">
       <div className="login-bg">
         <h2 className="login-heading">Login</h2>
@@ -167,6 +170,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

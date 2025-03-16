@@ -1,185 +1,153 @@
 
-/*import React, {  useEffect, useState } from "react";
 
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-
-const UserChats = ({ onselected }) => {
-  const token = localStorage.getItem('token')
-  const tokendata = jwtDecode(token)
-  const user = tokendata; 
-  const [chatMembersData, setChatMembersData] = useState([]);
- 
-  console.log("the user is ", user);
-
-  useEffect(() => {
-    if (!user) {
-      console.warn("User is not logged in or not available");
-      return;
-    }
-    console.log("vks", user.id);
-
-    const fetchUserChats = async () => {
-      try {
-        const chatResponse = await axios.get(
-          `http://localhost:8000/chats/${user.id}`
-        );
-        console.log("Chats response:", chatResponse.data);
-
-        // Get the other member ID (not user.id), filter out undefined and duplicates
-        const otherMemberIds = chatResponse.data
-          .map((chat) =>
-            chat.members.find((memberId) => memberId !== user.id) // Find the member that is not user.id
-          )
-          .filter((id) => id); // Remove undefined values
-
-        console.log("Other member IDs:", otherMemberIds);
-
-        // Remove duplicates
-        const uniqueMemberIds = [...new Set(otherMemberIds)];
-
-        console.log("Unique Member IDs:", uniqueMemberIds);
-
-        // Fetch user details for each member ID
-        const userDetails = await Promise.all(
-          uniqueMemberIds.map(async (memberId) => {
-            const userResponse = await axios.get(
-              `http://localhost:8000/user/gdata/${memberId}`
-            );
-            return userResponse.data;
-          })
-        );
-
-        console.log("Fetched user details:", userDetails);
-
-        setChatMembersData(userDetails);
-      } catch (error) {
-        console.error("Error fetching chats or user details:", error);
-      }
-    };
-
-    fetchUserChats();
-  }, [user]);
-
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h2>User Chats</h2>
-      {!user ? (
-        <p>No user data available. Please log in.</p>
-      ) : chatMembersData.length > 0 ? (
-        <ul>
-          {chatMembersData.map((member, index) => (
-            <li
-              key={index}
-              onClick={() => onselected(member.name, member._id)} // Passing name and id separately
-            >
-              <strong>ID:</strong> {member._id} <br />
-              <strong>Name:</strong> {member.name} <br />
-              <strong>Email:</strong> {member.email}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No chat members available.</p>
-      )}
-    </div>
-  );
-};
-
-export default UserChats;
-*/
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Fixed typo: remove curly braces if jwtDecode is the default export.
+import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
+import { Link } from "react-router-dom";
+
+const socket = io("http://localhost:8800");
 
 const UserChats = ({ onselected }) => {
-  const [user, setUser] = useState(null); // Store decoded user data in state
-  const [chatMembersData, setChatMembersData] = useState([]);
+    const [user, setUser] = useState(null);
+    const [chatMembersData, setChatMembersData] = useState([]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const tokendata = jwtDecode(token);
-      setUser(tokendata); // Set user data once when the token is decoded
-    } else {
-      console.warn("No token found in localStorage");
-    }
-  }, []); // Run once on component mount
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const tokendata = jwtDecode(token);
+            setUser(tokendata);
+        }
+    }, []);
 
-  console.log("The user is ", user);
+    useEffect(() => {
+        if (!user) return;
 
-  useEffect(() => {
-    if (!user) {
-      console.warn("User is not logged in or not available");
-      return;
-    }
-    console.log("vks", user.id);
+        const fetchUserChats = async () => {
+            try {
+                const chatResponse = await axios.get(`http://localhost:8000/chats/${user.id}`);
+                const otherMemberIds = chatResponse.data
+                    .map((chat) => chat.members.find((memberId) => memberId !== user.id))
+                    .filter((id) => id);
 
-    const fetchUserChats = async () => {
-      try {
-        const chatResponse = await axios.get(
-          `http://localhost:8000/chats/${user.id}`
-        );
-        console.log("Chats response:", chatResponse.data);
+                const uniqueMemberIds = [...new Set(otherMemberIds)];
 
-        // Get the other member ID (not user.id), filter out undefined and duplicates
-        const otherMemberIds = chatResponse.data
-          .map((chat) =>
-            chat.members.find((memberId) => memberId !== user.id) // Find the member that is not user.id
-          )
-          .filter((id) => id); // Remove undefined values
+                const userDetails = await Promise.all(
+                    uniqueMemberIds.map(async (memberId) => {
+                        const userResponse = await axios.get(`http://localhost:8000/user/gdata/${memberId}`);
+                        const chatId = chatResponse.data.find(chat => chat.members.includes(memberId))._id;
+                        const unseenMessagesResponse = await axios.get(`http://localhost:8000/msg/gumc/${chatId}/${user.id}`);
+                        return {
+                            ...userResponse.data,
+                            chatId, // Add chatId to the member data
+                            unseenCount: unseenMessagesResponse.data.unseenCount
+                        };
+                    })
+                );
 
-        console.log("Other member IDs:", otherMemberIds);
+                setChatMembersData(userDetails);
+            } catch (error) {
+                console.error("Error fetching chats or user details:", error);
+            }
+        };
 
-        // Remove duplicates
-        const uniqueMemberIds = [...new Set(otherMemberIds)];
+        fetchUserChats();
 
-        console.log("Unique Member IDs:", uniqueMemberIds);
+        // Listen for new chats
+        socket.on("update-chats", (chatData) => {
+            console.log("New chat received:", chatData);
+            fetchUserChats(); // Refresh the chat list
+        });
 
-        // Fetch user details for each member ID
-        const userDetails = await Promise.all(
-          uniqueMemberIds.map(async (memberId) => {
-            const userResponse = await axios.get(
-              `http://localhost:8000/user/gdata/${memberId}`
-            );
-            return userResponse.data;
-          })
-        );
+        // Cleanup socket listener
+        return () => {
+            socket.off("update-chats");
+        };
+    }, [user]);
 
-        console.log("Fetched user details:", userDetails);
+    const handleChatClick = async (memberId, chatId, memberName) => {
+        try {
+            // Mark messages as seen
+            await axios.post(`http://localhost:8000/msg/markmsg`, {
+                chatId,
+                userId: user.id
+            });
 
-        setChatMembersData(userDetails);
-      } catch (error) {
-        console.error("Error fetching chats or user details:", error);
-      }
+            // Refresh the unseen message count for this chat
+            const updatedChatMembersData = chatMembersData.map((member) => {
+                if (member._id === memberId) {
+                    return { ...member, unseenCount: 0 }; // Set unseenCount to 0
+                }
+                return member;
+            });
+
+            setChatMembersData(updatedChatMembersData);
+
+            // Call the onselected function to open the chat
+            onselected(memberName, memberId);
+        } catch (error) {
+            console.error("Error marking messages as seen:", error);
+        }
     };
 
-    fetchUserChats();
-  }, [user]); // Dependency array now depends on stable `user`
-
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h2>User Chats</h2>
-      {!user ? (
-        <p>No user data available. Please log in.</p>
-      ) : chatMembersData.length > 0 ? (
-        <ul>
-          {chatMembersData.map((member, index) => (
-            <li
-              key={index}
-              onClick={() => onselected(member.name, member._id)} // Passing name and id separately
-            >
-              <strong>ID:</strong> {member._id} <br />
-              <strong>Name:</strong> {member.name} <br />
-              <strong>Email:</strong> {member.email}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No chat members available.</p>
-      )}
-    </div>
-  );
+    return (
+        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+            <h2>User Chats</h2>
+            {!user ? (
+                <p>No user data available. Please log in.</p>
+            ) : chatMembersData.length > 0 ? (
+                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    {chatMembersData.map((member, index) => (
+                        <li
+                            key={member._id || index}
+                            style={{
+                                padding: "15px",
+                                marginBottom: "10px",
+                                borderRadius: "5px",
+                                backgroundColor: member.unseenCount > 0 ? "#e0e0e0" : "#f5f5f5", // Darker background for unseen messages
+                                transition: "all 0.3s ease",
+                                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                                cursor: "pointer",
+                                position: "relative" // For positioning the red dot
+                            }}
+                            onClick={() => handleChatClick(member._id, member.chatId, member.name)}
+                        >
+                            <p>
+                                <strong>Name:</strong>
+                                <Link
+                                    to={`/Pprofile/${member._id}`}
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "#007bff",
+                                        fontWeight: "bold"
+                                    }}
+                                    onMouseOver={(e) => e.currentTarget.style.textDecoration = "underline"}
+                                    onMouseOut={(e) => e.currentTarget.style.textDecoration = "none"}
+                                >
+                                    {member.name}
+                                </Link>
+                            </p>
+                            {member.unseenCount > 0 && (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: "10px",
+                                        right: "10px",
+                                        width: "10px",
+                                        height: "10px",
+                                        borderRadius: "50%",
+                                        backgroundColor: "red"
+                                    }}
+                                />
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No chat members available.</p>
+            )}
+        </div>
+    );
 };
 
 export default UserChats;

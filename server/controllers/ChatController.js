@@ -49,6 +49,35 @@ const findchat = async(req,res)=>{
     }
   
 }
+const ischat = async(req,res)=>{
+    try {
+        const { member1, member2 } = req.body;
+        
+        // Validate input
+        if (!member1 || !member2) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Both member IDs are required' 
+            });
+        }
+
+        // Find chat where both members exist
+        const existingChat = await chatModel.findOne({
+            members: { $all: [member1, member2] }
+        });
+        if(existingChat){
+            return res.status(200).send(true);
+        }
+        // Return response based on whether chat exists
+        else{
+            return res.status(200).send(false)
+        }
+
+    } catch (error) {
+        console.error('Error checking chat existence:', error);
+        return res.status(500).send(error );
+    }
+}
 const getChatid = async(req,res)=>{
     try {
         const{member1,member2} = req.body
@@ -71,4 +100,4 @@ const getChatid = async(req,res)=>{
     }
 }
 
-module.exports = {createchat,userChats,findchat,getChatid}
+module.exports = {createchat,userChats,findchat,getChatid,ischat}

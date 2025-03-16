@@ -79,4 +79,19 @@ try {
     res.status(400).send(error)
 }
 }
-module .exports ={postitem,allitem,getitems,updatebidded}
+const typenname = async(req,res)=>{
+  try {
+    const{id}=req.query
+    const item = await itemModel.findById(id)
+    if(item){
+      res.status(200).send({type:item.type,productname :item.productname})
+    }
+    else{
+      res.status(404).send('item not found')
+    }
+  } catch (error) {
+    res.status(400).send(error)
+    console.log(error)
+  }
+}
+module .exports ={postitem,allitem,getitems,updatebidded,typenname}

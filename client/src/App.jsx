@@ -14,12 +14,13 @@ import Searchitem from './pages/searchitem'
 import Bidding from './pages/bidding'
 import Navbar from './components/navbar'
 import Profile from './pages/profile'
-
+import DetailedDesc from './pages/detailedDesc'
+import Pprofile from './pages/Pprofile'
 function App() {
 return(
-  <>
+  <> 
 <BrowserRouter>
-<Navbar/>
+
   <Routes>
    
     <Route path='/' element={<Home/>}/>
@@ -31,6 +32,9 @@ return(
     <Route path ='/test' element={<UserChats/>}/>
     <Route path='/bidding' element={<Bidding/>}/>
     <Route path='/profile' element={<Profile/>}/>
+    <Route path='/detailedDesc/:id' element={<DetailedDesc/>}/> 
+    <Route path='/Pprofile/:id'element={<Pprofile/>}/>
+
   </Routes>
   </BrowserRouter>
   </>

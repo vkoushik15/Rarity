@@ -5,6 +5,7 @@ import{UserContext} from '../context/context'
 import { jwtDecode } from 'jwt-decode';
 import '../styling/upload.css'
 import bgimage from '../images/upnew.jpg'
+import Navbar from '../components/navbar';
 function Upload() {
   const user1 = useContext(UserContext)
   console.log('hi')
@@ -53,6 +54,8 @@ function Upload() {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className='handleupload'>
      <img src={bgimage}></img>
       <form onSubmit={handleSubmit} >
@@ -77,6 +80,7 @@ function Upload() {
         <button type="submit">Upload</button>
       </form>
     </div>
+    </>
   );
 }
 

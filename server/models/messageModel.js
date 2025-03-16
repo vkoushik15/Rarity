@@ -10,6 +10,10 @@ const messageschema = mongoose.Schema({
     },
     text:{
         type:String
+    },
+    isSeen:{
+        type:Boolean,
+        default:false
     }
 },
 {timestamps:true})

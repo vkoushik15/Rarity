@@ -63,8 +63,73 @@ const UserProvider = ({ children }) => {
 
 export { UserContext, UserProvider };
 */
+// import React, { useState, createContext, useEffect } from "react";
+// import {jwtDecode} from "jwt-decode"; // Make sure you have the correct import
+
+// // Create UserContext
+// const UserContext = createContext();
+
+// // UserProvider Component
+// const UserProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
+
+//   // Function to fetch user from the token
+//   const fetchUserFromToken = () => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       try {
+//         const decodedToken = jwtDecode(token);
+//         console.log(decodedToken.id)
+//         const userid = decodedToken.id
+//         // Optional: Check for token expiration
+//         const currentTime = Date.now() / 1000; // Current time in seconds
+//         if (decodedToken.exp && decodedToken.exp < currentTime) {
+//           console.log("Token has expired");
+//           setUser(null);
+//           localStorage.removeItem("token");
+//         } else {
+//           setUser(decodedToken);
+//         }
+//       } catch (error) {
+//         console.error("Error decoding token:", error);
+//         setUser(null);
+//         localStorage.removeItem("token");
+//       }
+//     } else {
+//       setUser(null);
+//     }
+//   };
+
+//   // Run the fetchUserFromToken function on mount
+//   useEffect(() => {
+//     fetchUserFromToken();
+//   }, []);
+
+//   // Watch for changes in localStorage token
+//   useEffect(() => {
+//     const handleStorageChange = () => {
+//       fetchUserFromToken();
+//     };
+
+//     // Listen for `storage` events
+//     window.addEventListener("storage", handleStorageChange);
+
+//     // Cleanup listener on unmount
+//     return () => {
+//       window.removeEventListener("storage", handleStorageChange);
+//     };
+//   }, []);
+
+//   return (
+//     <UserContext.Provider value={{ user, refreshUser: fetchUserFromToken ,userid}}>
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };
+
+// export { UserContext, UserProvider };
 import React, { useState, createContext, useEffect } from "react";
-import {jwtDecode} from "jwt-decode"; // Make sure you have the correct import
+import { jwtDecode } from "jwt-decode"; // Ensure correct import
 
 // Create UserContext
 const UserContext = createContext();
@@ -79,8 +144,9 @@ const UserProvider = ({ children }) => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
+        console.log(decodedToken.id);
 
-        // Optional: Check for token expiration
+        // Check for token expiration
         const currentTime = Date.now() / 1000; // Current time in seconds
         if (decodedToken.exp && decodedToken.exp < currentTime) {
           console.log("Token has expired");
@@ -99,7 +165,7 @@ const UserProvider = ({ children }) => {
     }
   };
 
-  // Run the fetchUserFromToken function on mount
+  // Run fetchUserFromToken on mount
   useEffect(() => {
     fetchUserFromToken();
   }, []);
@@ -120,7 +186,7 @@ const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, refreshUser: fetchUserFromToken }}>
+    <UserContext.Provider value={{ user, refreshUser: fetchUserFromToken, userid: user?.id }}>
       {children}
     </UserContext.Provider>
   );
