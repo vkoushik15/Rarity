@@ -1,67 +1,67 @@
-/* Centering the outer box on the page */
+
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height */
-    background-color: #f5f5f5; /* Light gray background for a clean look */
+    height: 100vh; 
+    background-color: #f5f5f5; 
   }
   
-  /* Outer black-bordered box */
+ 
   .outer-box {
-    width: 35%; /* Slightly more than one-third of the screen */
-    height: 400px; /* Fixed height for consistency */
-    border: 2px solid black; /* Black border for definition */
-    border-radius: 10px; /* Smooth rounded corners */
-    background-color: white; /* Clean white background for the box */
-    overflow-y: auto; /* Enable vertical scrolling for overflow */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 35%; 
+    height: 400px; 
+    border: 2px solid black;
+    border-radius: 10px; 
+    background-color: white; 
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
   }
   
   /* Header section */
   .header {
-    background-color: black; /* Black header background for contrast */
-    color: white; /* White text for readability */
+    background-color: black; 
+    color: white; 
     text-align: center;
-    font-size: 20px; /* Larger font for prominence */
+    font-size: 20px;
     font-weight: bold;
-    padding: 10px; /* Padding for a spacious look */
-    border-bottom: 2px solid gray; /* Optional: gray bottom border for separation */
+    padding: 10px; 
+    border-bottom: 2px solid gray; 
   }
   
   /* Scrollable content area */
   .content {
-    padding: 10px; /* Inner spacing within the scrollable area */
+    padding: 10px; 
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Vertical gap between items */
+    gap: 10px; 
   }
   
   /* Individual bid item */
   .bid-item {
-    background-color: green; /* Bright green background for items */
-    color: white; /* White text for contrast */
-    padding: 10px; /* Padding inside each item for spacing */
-    border-radius: 5px; /* Slightly rounded corners for a modern look */
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); /* Shadow for individual items */
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effects */
+    background-color: green; 
+    color: white;
+    padding: 10px; 
+    border-radius: 5px; 
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
   }
   
   /* Sender name styling */
   .bid-sender {
-    font-size: 16px; /* Slightly larger font for sender name */
-    font-weight: bold; /* Bold for emphasis */
+    font-size: 16px; 
+    font-weight: bold; 
   }
   
   /* Bid price styling */
   .bid-price {
-    font-size: 14px; /* Standard font size */
-    margin-top: 5px; /* Space below the sender name */
+    font-size: 14px; 
+    margin-top: 5px; 
   }
   
   /* Hover effect for bid items */
   .bid-item:hover {
-    transform: scale(1.02); /* Slight zoom effect on hover */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+    transform: scale(1.02); 
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); 
   }
   
