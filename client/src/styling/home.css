@@ -3,14 +3,14 @@
     margin-top: 700px;
     position: relative;
     width: 100%;
-    height: auto; /* Remove fixed height for the image container */
+    height: auto;
     overflow: hidden;
   }
   
   .image-container img {
     width: 1510px;
-    height: auto; /* Maintain original aspect ratio */
-    object-fit: cover; /* Ensure the image stretches across the container */
+    height: auto;
+    object-fit: cover;
   }
   
   /* Styling for the h1 text */
@@ -21,10 +21,10 @@
     transform: translate(-50%, -50%);
     font-size: 3rem;
     color: white;
-    background: rgba(0, 0, 0, 0.3); /* More transparent background */
+    background: rgba(0, 0, 0, 0.3); 
     padding: 20px;
     border-radius: 10px;
-    animation: fadeIn 3s ease-in-out; /* Animation duration */
+    animation: fadeIn 3s ease-in-out; 
     z-index: 10;
   }
   
@@ -67,8 +67,8 @@
   /* Styling for the collectibles gallery */
   .collectibles-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid with a minimum column size */
-    gap: 20px; /* Space between grid items */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px; 
     padding: 20px;
     justify-items: center;
     margin-top: 20px;
@@ -77,20 +77,20 @@
   /* Individual Collectible Card */
   .collectible-card {
     background-color: #fff;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    overflow: hidden; /* Ensure no content overflows */
-    width: 100%; /* Ensure the box takes full width within the grid cell */
-    max-width: 300px; /* Max width for the card */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden; 
+    width: 100%; 
+    max-width: 300px; 
     padding: 20px;
   }
   
   /* Collectible Image */
   .collectible-card img {
-    width: 100%; /* Make the image fill the card */
-    height: 200px; /* Fixed height for images */
-    object-fit: cover; /* Ensure the image covers the space without distortion */
-    border-radius: 10px; /* Rounded corners for the image */
+    width: 100%; 
+    height: 200px; 
+    object-fit: cover; 
+    border-radius: 10px;
     margin-bottom: 15px;
   }
   
@@ -124,33 +124,33 @@
   
   /* Start Bid Button */
   .collectible-card button:nth-child(1) {
-    background-color: #007bff; /* Blue */
+    background-color: #007bff; 
     color: white;
   }
   
   /* Go to Bidding Button */
   .collectible-card button:nth-child(2) {
-    background-color: #28a745; /* Green */
+    background-color: #28a745; 
     color: white;
   }
   
   /* Button Hover Effects */
   .collectible-card button:hover {
-    opacity: 0.9; /* Slight opacity change on hover */
+    opacity: 0.9; 
   }
   
   /* Responsive Design: For smaller screens */
   @media (max-width: 768px) {
     .collectibles-gallery {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Reduce column size on smaller screens */
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
     }
   
     .collectible-card {
-      max-width: 100%; /* Full width on smaller screens */
+      max-width: 100%;
     }
   
     .collectible-card img {
-      height: 180px; /* Adjust image height */
+      height: 180px; 
     }
   
     .collectible-card h3 {
