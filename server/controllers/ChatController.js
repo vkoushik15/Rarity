@@ -20,16 +20,11 @@ const userChats = async(req,res)=>{
         const chat = await chatModel.find({
             members:{$in:[req.params.userId]}
         })
-        //return res.status(200).json(chat)
-        //console.log(chat)
+        
         const secondMemberIds = chat.map(chatDoc => chatDoc.members[1]);
-        //console.log(secondMemberIds)
-       /* const userNames = await userModel.find({
-            _id: { $in: secondMemberIds }
-          }).select('name');
-          console.log(userNames)*/
+      
           return res.status(200).json(chat)
-          //return res.status(200).json(userNames.map(user => user.name));
+         
 
     } catch (error) {
         return res.status(500).json(error)
@@ -88,8 +83,7 @@ const getChatid = async(req,res)=>{
         const chat = await chatModel.findOne({
             members:{$all:[member1,member2]}
         })
-        //console.log('this from chat',chat)
-       // console.log(chat._id.toString())
+       
         res.status(200).send(chat._id.toString())
         if(!chat){
             return res.status(404).send('no chat found')
