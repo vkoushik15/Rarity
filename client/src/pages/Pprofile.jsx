@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const Pprofile = () => {
-    const [data, setData] = useState(null); // User data
-    const [posts, setPosts] = useState([]); // User's posts
+    const [data, setData] = useState(null); 
+    const [posts, setPosts] = useState([]); 
     const { id } = useParams();
 
     useEffect(() => {
