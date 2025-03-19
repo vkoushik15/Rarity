@@ -1,32 +1,4 @@
-// import React, { useEffect, useState } from 'react'
-// import { useParams } from 'react-router-dom'
-// const Pprofile = () => {
-//     const [data,setData]= useState('')
-//     const[post,setPost]=useState('')
-//     const {id} = useParams()
-//     useEffect(()=>{
-//    const getuser = async()=>{
-//     try {
-//         const userdata = await axios.get(`http://localhost:8000/user/gdata/${id}`)
-//         const userposts = await axios.get(`http://localhost:8000/user/posts/${id}`)
-//         setData(userdata.data)
-//         setPost(userposts.data)
-//     } catch (error) {
-//         console.log(error)
-//     }
-    
-//    }
-//    getuser()
 
-
-//     },[])
-
-//   return (
-//     <div>Pprofile</div>
-//   )
-// }
-
-// export default Pprofile
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
