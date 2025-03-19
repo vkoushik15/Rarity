@@ -32,7 +32,7 @@ const Chatpage = () => {
 
     // Initialize Socket.IO when user1 is available
     useEffect(() => {
-        if (!user1) return; // Ensure user1 is available
+        if (!user1) return;
         console.log('the checking for scoket in fe',user1.id)
         socket.current = io("ws://localhost:8800");
 
@@ -61,12 +61,7 @@ const Chatpage = () => {
     }, [sendmessage]);
 
     // Receive message from the server
-  /*  useEffect(() => {
-        socket.current.on("receive-message", (data) => {
-            console.log("Received message:", data);
-            setRecmessage(data);
-        });
-    }, []);*/
+
 
     // Handle user selection
     const handleselecteduser = (user, id) => {
