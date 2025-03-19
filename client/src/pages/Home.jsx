@@ -4,26 +4,26 @@ import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Img from "../images/home1.jpg";
-import "../styling/home.css"; // Import the custom CSS file
+import "../styling/home.css"; 
 import Navbar from "../components/navbar";
 
 function Home() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [userId, setUserId] = useState(null); // State to store the user ID
+  const [userId, setUserId] = useState(null); 
   const[logged,setLogged] =useState(false)
   const token = localStorage.getItem("token");
   
-  // Check if token exists and decode user ID if it does
+  
   useEffect(() => {
     if (token) {
       const user1 = jwtDecode(token);
-      setUserId(user1.id); // Store user ID if token exists
+      setUserId(user1.id); 
       setLogged(true)
     }
   }, [token]);
 
-  // Fetch posts from the backend
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -36,7 +36,7 @@ function Home() {
     fetchPosts();
   }, []);
 
-  // Function to handle the "Start Bid" button click
+  
   const handleStartBid = async (post) => {
     const postid = post._id;
     const ownername = post.username;
@@ -99,7 +99,7 @@ function Home() {
             <h3>{post.productname}</h3>
             <p>Starting Price: ₹{post.price}</p>
             <p>Bidded: {post.bidded ? "Yes" : "No"}</p>
-            {/* If user is logged in and the post is not bidded, show "Start Bid" button */}
+            
             {userId && userId === post.userId && !post.bidded && (
               <button
                 style={{ color: "blue" }}
@@ -108,7 +108,7 @@ function Home() {
                 Start Bid
               </button>
             )}
-            {/* If the post is bidded, show the "Go to Bidding" button */}
+            
             {(post.bidded&&token) && (
               <button
                 style={{ color: "green" }}
