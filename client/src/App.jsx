@@ -10,7 +10,7 @@ import UserChats from './components/UserChats'
 import Home from './pages/Home'
 import Upload from './pages/upload'
 import Searchitem from './pages/searchitem'
-//import Chatbox from './components/chatbox'
+
 import Bidding from './pages/bidding'
 import Navbar from './components/navbar'
 import Profile from './pages/profile'
